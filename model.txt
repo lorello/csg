@@ -1,0 +1,48 @@
+
+set dirs:$google_id "{id: $google_it, name:lcdfslfkdsòfsd, owner:lorello}"
+hset dirs:lookup:name $name $google_id
+
+
+per trovare
+
+$google_id = hget dirs:lookup:name $name
+dir = get dirs:$google_id
+
+oppure
+
+hset dirs:$google_id owner
+hset dirs:$google_id name 
+hset dirs:$google_id details "{...}"
+
+# dir di lorello in myfiles
+sadd myfiles:lorello $gid1 $gid2 $gid4 
+
+# vedere l'elenco delle dirs
+sort myfiles:lorello by dirs:*->name get dirs:*->details
+
+
+# setta la cancellazione automatica dopo 1h
+expire dirs:$google_id 3600
+# per interrogare
+ttl dirs:$google_id
+# per annullare la cancellazione
+persist dirs:$google_id
+
+
+CODE
+subscribe warnings
+publish warnings "è tardi!"
+
+# annullare sottoscrizione
+unsubscribe per terminare
+# + canali
+subscribe warnings criticals
+subscribe warn:*
+
+#per fare debg
+monitor 
+
+config set slowlog-log-slower-than 0
+slowlog get
+slowlog get 10
+
