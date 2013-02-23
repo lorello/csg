@@ -17,9 +17,8 @@ $app['debug'] = true;
 $app = new Silex\Application();
 
 // TODO: separate these in src/controllers.php
-
 $app->get(
-    '/v1/files.get',
+    '/test',
     function () use ($app) {
         $name = $request->headers->get('name');
 
@@ -34,6 +33,16 @@ $app->get(
         return $f->get();
     }
 );
+
+
+// Group controllers by type
+$v1 = $app['controllers_factory'];
+$v1->get('/', function () {
+    return 'V1 homepage';
+});
+// Each requesto on $v1 will be prefixed with '/v1'
+$app->mount('/v1', $v1);
+
 
 
 $app->error(
