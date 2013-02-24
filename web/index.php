@@ -12,6 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 // TODO: create index_dev.php for dev environment
 $app['debug'] = true;
 
+// Application config
+$app['my_config'] = 'value';
+
+$app['storage_service'] = function ($app) {
+    return ObjectStorageFactory::load($name);
+};
+
 // TODO: separate this in bootstrap
 // Create the app instance
 $app = new Silex\Application();
@@ -30,7 +37,7 @@ $app->get(
     function () use ($app) {
         $name = $request->headers->get('name');
 
-        $f = ObjectStorageFactory::load($name);
+        $f = $app['storage_service']($name);
 
         // TODO: throw an exception specific in preceding load
         // then catch here and return a 404
