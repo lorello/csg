@@ -80,34 +80,66 @@ class GoogleDrive extends GoogleApi implements ObjectStorage
 // saving metadata to posix extended attributes
 class PosixFile implements ObjectStorage
 {
-    private $name;
+    private $domain;
+    private $username;
+    private $pathname;
     private $root = '../data';
+
+    public function __construct($domain, $username, $pathname, $root='')
+    {
+        if (!empty($root)) {
+            $this->root = $root;
+        }
+        $this->domain = $domain;
+        $this->username = $username;
+        $this->pathname = $pathname;
+        $this->fullpathname = implode(
+            '/', 
+            array(
+                $this->root,
+                $this->domain,
+                $this->username,
+                $this->pathname)
+            );
+    }
 
     public function createItem($metadata, $content)
     {
-
+        $item_dir = dirname($this->fullpathname);
+        if (!is_dir($item_dir)) {
+            mkdir($item_dir);
+        }
+        if(!file_put_contents($this->fullpathname, $content)) {
+            throw new Exception('Unable to create '.$this->fullpathname);
+        }
+        return TRUE;
     }
 
     public function removeItem()
     {
-
+        if (!file_exists($this->fullpathname)) {
+            throw new Exception('Cannot remove non existent item '.$this->fullpathname);
+        }
+        return TRUE;
     }
 
     public function getItem()
     {
-
+        if (!file_exists($this->fullpathname)) {
+            throw new Exception('Cannot retrieve non existent item '.$this->fullpathname);
+        }
+        return file_get_contents($this->fullpathname);
     }
 
     public function updateItemMetadata($label, $value)
     {
-
+        return 'Updating metadata on '.$this->fullpathname.": $label=$value";
     }
 }
 
 // At the end I need a Factory to create an object and to get the right object type
 class ObjectStorageFactory
 {
-
     const DOMAIN_PATTERN = '([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}';
 
     const USERNAME_PATTERN = '([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*';
@@ -126,6 +158,8 @@ class ObjectStorageFactory
         }
     }
 
+    // create an object of the factory
+    // name must match PROTO://USER@DOMAIN/PATH
     public function load($uri)
     {
         if (empty($uri)) {
@@ -162,11 +196,11 @@ class ObjectStorageFactory
 
         switch($proto) {
             case 'gdrive':
-                return new GoogleDrive();
+                return new GoogleDrive($domain, $username, $pathname);
                 break;
 
             case 'posix':
-                return new PosixFile();
+                return new PosixFile($domain, $username, $pathname);
                 break;
 
             default:
