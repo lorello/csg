@@ -2,12 +2,16 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+require '../src/Softec/Cloud/ObjectStorageServiceProvider.php';
 require '../src/Softec/Cloud/ObjectStorage.php';
+require '../src/Softec/Cloud/PosixObjectStorage.php';
+require '../src/Softec/Cloud/GoogleDriveObjectStorage.php';
 
 # to use Request object
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+# I'll define ObjectStorage as a Silex service provider
 use Silex\ServiceProviderInterface;
 
 // Create the app instance
@@ -24,7 +28,7 @@ $app['object_storage.protocols'] = array('gdrive', 'posix');
 $app->register(
     new Softec\Cloud\ObjectStorageServiceProvider(),
     array(
-        'active_protocols' => $app['object_storage.protocols']
+        'active_protocols' => $app['object_storage.protocols'] // not used anymore, remove ?
     )
 );
 
@@ -44,6 +48,7 @@ $app->get(
         //$name = $app['request']->headers->get('name');
         $name = "posix://lorello@softecspa.it/prova/my.txt";
         $f = $app['object_storage']($name);
+        xdebug_var_dump($f);
 
         // TODO: throw an exception specific in preceding load
         // then catch here and return a 404
@@ -51,7 +56,11 @@ $app->get(
         //    $app->error('404', "File $name is not present");
         // }
 
-        return $f->getItem();
+        $stream = function () use ($f) {
+            echo "!ciao";
+        };
+
+        return $app->stream($stream, 200, array('Content-Type' => 'image/png'));
     }
 );
 

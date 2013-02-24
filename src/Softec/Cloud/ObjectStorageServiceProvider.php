@@ -12,7 +12,7 @@ class ObjectStorageServiceProvider implements ServiceProviderInterface
     // create the factory specifying supported storage types
     public function register(Application $app)
     {
-        define('USERNAME_PATTERN', '([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*');
+        define('USERNAME_PATTERN', '([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*)');
         define('DOMAIN_PATTERN', '([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}');
 
         // service object_storage($name)
@@ -44,8 +44,7 @@ class ObjectStorageServiceProvider implements ServiceProviderInterface
                 }
 
                 if (!preg_match('/(' . DOMAIN_PATTERN . ')(\/.*)/', $address, $matches)) {
-                    // throw new \Exception("Domain/path is not valid");
-                    echo "proboem here";
+                    throw new \Exception("Domain/path is not valid");
                 }
                 $domain = $matches[1];
                 $pathname = $matches[4];
