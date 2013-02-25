@@ -2,13 +2,17 @@
 
 namespace Softec\Cloud;
 
-// Using a posix filesystem with can simulate object storage
+// Using a posix filesystem which can simulate object storage
 // saving metadata to posix extended attributes
 class PosixFile implements ObjectStorage
 {
     private $domain;
+
     private $username;
+
     private $pathname;
+
+    // TODO: passing this as parameter
     private $root = '../data';
 
     public function __construct($domain, $username, $pathname, $root = '')

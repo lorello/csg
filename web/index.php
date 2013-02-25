@@ -2,16 +2,17 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+# TODO: classes autoloading
 require '../src/Softec/Cloud/ObjectStorageServiceProvider.php';
 require '../src/Softec/Cloud/ObjectStorage.php';
 require '../src/Softec/Cloud/PosixObjectStorage.php';
 require '../src/Softec/Cloud/GoogleDriveObjectStorage.php';
 
-# to use Request object
+// to use Request object
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-# I'll define ObjectStorage as a Silex service provider
+// I'll define ObjectStorage as a Silex service provider
 use Silex\ServiceProviderInterface;
 
 // Create the app instance
@@ -21,7 +22,7 @@ $app = new Silex\Application();
 // TODO: create index_dev.php for dev environment
 $app['debug'] = true;
 
-// Config with protocols to activate in this instance
+// Config which protocols to activate in this instance
 $app['object_storage.protocols'] = array('gdrive', 'posix');
 
 // TODO: separate this in bootstrap
@@ -41,14 +42,37 @@ $app->before(
     }
 );
 
-// TODO: separate these in src/controllers.php
 $app->get(
-    '/test',
+    '/',
+    function () use ($app) {
+        return $app->redirect('/v1');
+    }
+);
+
+// Group controllers by type
+$v1 = $app['controllers_factory'];
+$v1->get(
+    '/',
+    function () use ($app) {
+        return $app->redirect('/v1/help');
+    }
+);
+
+$v1->get(
+    '/help',
+    function () {
+        return "List of commands:\nfiles/get";
+    }
+);
+
+// TODO: separate these in src/controllers.php
+$v1->get(
+    '/files/get',
     function () use ($app) {
         //$name = $app['request']->headers->get('name');
         $name = "posix://lorello@softecspa.it/prova/my.txt";
         $f = $app['object_storage']($name);
-        xdebug_var_dump($f);
+        //xdebug_var_dump($f);
 
         // TODO: throw an exception specific in preceding load
         // then catch here and return a 404
@@ -63,17 +87,23 @@ $app->get(
         return $app->stream($stream, 200, array('Content-Type' => 'image/png'));
     }
 );
+$app->post(
+    '/files/push',
+    function (Request $request) use ($app) {
+        $content = $request->getContent();
+        $name = $request->headers->get('name');
+        if (empty($name)) {
+            $app->error('500', "Cannot push file, without specifying it's name");
+        }
+        $name = "posix://lorello@softecspa.it/prova/my.txt";
+        $f = $app['object_storage']($name);
+        $f->createItem($metadata, $content);
 
-
-// Group controllers by type
-$v1 = $app['controllers_factory'];
-$v1->get(
-    '/',
-    function () {
-        return 'V1 homepage';
+        return $app->json(array('response' => 'OK', 'name' => $name));
     }
 );
-// Each requesto on $v1 will be prefixed with '/v1'
+
+// Each request on $v1 will be prefixed with '/v1'
 $app->mount('/v1', $v1);
 
 $app->error(
