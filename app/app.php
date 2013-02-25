@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 # TODO: classes autoloading
-require '../src/Softec/Cloud/ObjectStorageServiceProvider.php';
-require '../src/Softec/Cloud/ObjectStorage.php';
-require '../src/Softec/Cloud/PosixObjectStorage.php';
-require '../src/Softec/Cloud/GoogleDriveObjectStorage.php';
+require __DIR__ . '/../src/Softec/Cloud/ObjectStorageServiceProvider.php';
+require __DIR__ . '/../src/Softec/Cloud/ObjectStorage.php';
+require __DIR__ . '/../src/Softec/Cloud/PosixObjectStorage.php';
+require __DIR__ . '/../src/Softec/Cloud/GoogleDriveObjectStorage.php';
 
 // to use Request object
 use Symfony\Component\HttpFoundation\Request;
