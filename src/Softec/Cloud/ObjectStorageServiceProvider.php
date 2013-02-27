@@ -8,7 +8,6 @@ use Silex\ServiceProviderInterface;
 class ObjectStorageServiceProvider implements ServiceProviderInterface
 {
 
-
     // create the factory specifying supported storage types
     public function register(Application $app)
     {
@@ -35,7 +34,7 @@ class ObjectStorageServiceProvider implements ServiceProviderInterface
                     $username = $parts[0];
                     $address = $parts[1];
                 } else {
-                    $username = '';
+                    $username = 'nobody';
                     $address = $parts[0];
                 }
 
