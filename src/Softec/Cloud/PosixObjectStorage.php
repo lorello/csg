@@ -38,7 +38,7 @@ class PosixFile implements ObjectStorage
     {
         $item_dir = dirname($this->fullpathname);
         if (!is_dir($item_dir)) {
-            mkdir($item_dir);
+            mkdir($item_dir, 0775, TRUE);
         }
         if (!file_put_contents($this->fullpathname, $content)) {
             throw new \Exception('Unable to create ' . $this->fullpathname);
@@ -68,6 +68,16 @@ class PosixFile implements ObjectStorage
     public function updateItemMetadata($label, $value)
     {
         return 'Updating metadata on ' . $this->fullpathname . ": $label=$value";
+    }
+
+    public function isDir() {
+        return is_dir($this->fullpathname);
+    }
+
+    public function getChildrens() {
+        if (!this->isDir())
+            throw new \Exception("Can get items only in directories and $this->fullpathname does not seems a directory");
+        return array();
     }
 }
 

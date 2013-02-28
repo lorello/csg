@@ -23,6 +23,8 @@ $app['object_storage.protocols'] = array('gdrive', 'posix');
 $app['auth.enable'] = true;
 $app['auth.keys'] = array('fqw7vTgs99PcpMdm', '9prpb4mRddwJwvgf');
 
+$app['files.max_size']=1000000;
+
 // TODO: separate this in bootstrap
 $app->register(
     new Softec\Cloud\ObjectStorageServiceProvider(),
@@ -60,6 +62,16 @@ $app->get(
     }
 );
 
+// ok: 200 OK, 201 created, 202 accepted, 203 not autoritative request, 204 no content, 205 reset content
+// ?: 300 multiple choices, 301 moved permanently, 302 found, 303 see other, 304 not modified
+// errors: 500, internal server error, 501 not implemented ,502 bad gateway, 503 Service Unavailable, 504 gateway timeout
+$app->get(
+    '/error/{code}',
+    function ($code) use ($app) {
+        return $app->json(array('response'=>'ko'), $code);
+    }
+)->assert('code', '\d{3}');
+
 
 // Group controllers by type
 $v1 = $app['controllers_factory'];
@@ -70,7 +82,6 @@ $v1->get(
         return $app->redirect('/v1/help');
     }
 );
-
 
 $v1->get(
     '/help',
@@ -84,8 +95,9 @@ $v1->get(
 $v1->get(
     '/files',
     function (Request $request) use ($app) {
-        $name = $app['request']->headers->get('name');
-        //$name = "posix://lorello@softecspa.it/prova/my.txt";
+        $name = $request->headers->get('Name');
+
+        // TODO: fix exception catching
         try {
             $f = $app['object_storage']($name);
         } catch (\Exception $e) {
@@ -99,46 +111,57 @@ $v1->get(
             );
         }
 
-        //xdebug_var_dump($f);
-
         // TODO: throw an exception specific in preceding load
         // then catch here and return a 404
         // if (!$f->exists()) {
         //    $app->error('404', "File $name is not present");
         // }
 
-        $stream = function () use ($f) {
-            echo "!ciao";
-        };
 
-        return $app->stream($stream, 201, array('Content-Type' => 'image/png'));
+        //$stream = function () use ($f) {
+        //    echo "!ciao";
+        //};
+
+        return $app->stream($f->getItem(), 200);
     }
 );
 
 // TODO: Insert a new file or update an existent one
-$app->post(
+$v1->post(
     '/files',
     function (Request $request) use ($app) {
-        $name = $request->headers->get('name');
-        if (empty($name)) {
-            $app->error('500', "Cannot create a file, without specifying it's name");
+        $name = $request->headers->get('Name');
+        $size = $request->headers->get('Size');
+        $checksum = $request->headers->get('Checksum');
+
+        if (empty($size)) {
+            $app->error('500', "Cannot create a file without specifying its size");
         }
+
+        if (empty($name)) {
+            $app->error('500', "Cannot create a file, without specifying its name");
+        }
+
+        if ($size > $app['files.max_size']) {
+            $app->error('500', "Cannot create a file bigger than ".$app['files.max_size']);
+        }
+
         $content = $request->getContent();
+        $metadata['size'] = $checksum;
+        $metadata['checksum'] = $checksum;
 
-
-        $name = "posix://lorello@softecspa.it/prova/my.txt";
         $f = $app['object_storage']($name);
         $f->createItem($metadata, $content);
 
-        return $app->json(array('response' => 'OK', 'name' => $name));
+        return $app->json(array('response' => 'OK', 'name' => $name), 201);
     }
 );
 
 // TODO: create a copy of a file to a new location
-$app->post(
+$v1->post(
     '/files/copy',
     function (Request $request) use ($app) {
-        $name = $request->headers->get('name');
+        $name = $request->headers->get('Name');
         if (empty($name)) {
             $app->error('500', "Cannot copy file, without specifying it's name");
         }
@@ -149,18 +172,23 @@ $app->post(
 
         // if destination and source protocol are the same I could implement a copy inside ObjectStorage
         // otherwise I could get the item and the post the item to $destination
+
+        $f = $app['object_storage']($name);
+        $d = $app['object_storage']($destination);
+
+
+
         return $app->json(array('response' => 'ok', 'name' => $name, 'destination' => $destination));
     }
 );
 
 // TODO: get a list of files in a folder
 $v1->get(
-    '/files/children',
+    '/files/childrens',
     function (Request $request) use ($app) {
         $name = $request->headers->get('name');
         $f = $app['object_storage']($name);
-
-        return $app->json(array('response' => 'ok', 'name' => $name));
+        return $app->json(array('response' => 'ok', 'name' => $name, 'childrens' => $f->getChildrens()));
     }
 );
 
