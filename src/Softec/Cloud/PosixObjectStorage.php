@@ -75,7 +75,7 @@ class PosixFile implements ObjectStorage
     }
 
     public function getChildrens() {
-        if (!this->isDir())
+        if (!self::isDir())
             throw new \Exception("Can get items only in directories and $this->fullpathname does not seems a directory");
         return array();
     }
