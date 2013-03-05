@@ -16,13 +16,27 @@ class PosixObjectStorageTest extends WebTestCase
 
         return $app;
     }
-
-    public function testFooBar()
+/*
+    public function testGetRoot()
     {
         $client = $this->createClient();
         $crawler = $client->request('GET', '/');
         $this->assertTrue($client->getResponse()->isOk());
-        $this->assertCount(1, $crawler->filter('h1:contains("Contact us")'));
-        $this->assertCount(1, $crawler->filter('form'));
+        $this->assertCount(1, $crawler->filter('h1:contains("Cloud Storage Gateway")'));
+    }
+    public function testGetV1Root()
+    {
+        $client = $this->createClient();
+        $crawler = $client->request('GET', '/v1');
+        $this->assertTrue($client->getResponse()->isOk());
+        $this->assertCount(1, $crawler->filter('h1:contains("Cloud Storage Gateway")'));
+    }
+ */
+    public function testGetV1Help()
+    {
+        $client = $this->createClient();
+        $crawler = $client->request('GET', '/v1/help');
+        $this->assertTrue($client->getResponse()->isOk());
+        $this->assertCount(1, $crawler->filter('h1:contains("Cloud Storage Gateway")'));
     }
 }
