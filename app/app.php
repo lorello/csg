@@ -58,7 +58,7 @@ $app->before(
 $app->get(
     '/',
     function () use ($app) {
-        return $app->redirect('/v1');
+        return $app->redirect('/v1/');
     }
 );
 
@@ -86,7 +86,7 @@ $v1->get(
 $v1->get(
     '/help',
     function () {
-        return "List of commands:\nfiles/get";
+        return "<h1>Cloud Storage Gateway</h1>\nList of commands:\n<code>files/get</code>\n";
     }
 );
 
