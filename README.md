@@ -20,6 +20,7 @@ GET         /v1/files               Name
 POST        /v1/files               Name, Content-Type, Content-Length
 GET         /v1/files/childrens     Name
 POST        /v1/files/copy          Name, Destination
+POST        /v1/files/link          Name, Destination
 POST        /v1/files/trash         Name
 DELETE      /v1/files               Name
 POST        /v1/files/touch         Name
