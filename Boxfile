@@ -1,0 +1,4 @@
+web1:
+  document_root: web
+  shared_writable_dirs:
+    - data
