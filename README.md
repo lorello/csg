@@ -11,7 +11,7 @@ A gateway for object-storage (S3, GDrive) and traditional storage protocols (FTP
 Api (v. 1)
 ------------
 
-All API access is over HTTPS, and accessed from the api.XXXX.com domain (or through yourdomain.com/api/v1/ for enterprise). All data is sent and received as JSON.
+All API access is over HTTPS, and accessed from the csg.pagodabox.com domain (or through yourdomain.com/api/v1/ for enterprise). All data is sent and received as JSON.
 <pre>
 Http verb   URL                     Parameters                
 
