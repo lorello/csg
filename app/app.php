@@ -131,7 +131,8 @@ $v1->post(
     '/files',
     function (Request $request) use ($app) {
         $name = $request->headers->get('Name');
-        $size = $request->headers->get('Size');
+        $size = $request->headers->get('Content-Length');
+        $size = $request->headers->get('Content-Type');
         $checksum = $request->headers->get('Checksum');
 
         if (empty($size)) {
@@ -205,7 +206,7 @@ $v1->post(
 
 // TODO: restore a file to trash
 $v1->post(
-    '/files/trash',
+    '/files/restore',
     function (Request $request) use ($app) {
         $name = $request->headers->get('name');
         $f = $app['object_storage']($name);
