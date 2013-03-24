@@ -1,4 +1,3 @@
 web1:
+  name: csg
   document_root: web
-  shared_writable_dirs:
-    - data
