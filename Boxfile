@@ -4,6 +4,9 @@ web1:
   shared_writable_dirs:
     - data
   php_extensions:
+    - redis
     - zip
-  after_build:
+  php_session_save_handler: redis
+  php_session_save_path: "tcp://tunnel.pagodabox.com:6379"
+ after_build:
     - "if [ ! -f composer.phar ]; then curl -s http://getcomposer.org/installer | php; fi; php composer.phar install"
