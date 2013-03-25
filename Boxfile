@@ -1,6 +1,8 @@
 web1:
   name: csg
   document_root: web
+  shared_writable_dirs:
+    - data
   php_extensions:
     - zip
   after_build:
