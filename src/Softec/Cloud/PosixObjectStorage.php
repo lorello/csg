@@ -77,7 +77,21 @@ class PosixFile implements ObjectStorage
     public function getChildrens() {
         if (!self::isDir())
             throw new \Exception("Can get items only in directories and $this->fullpathname does not seems a directory");
-        return array();
+
+        $counter = 0;
+        $iterator = new \DirectoryIterator($this->fullpathname);
+        foreach($iterator as $k=>$v) {
+            if (!$v->isDot())
+            {
+                $results[$k]['name'] = $v->getBasename();
+                $results[$k]['size'] = $v->getSize();
+                $results[$k]['type'] = $v->getType();
+                $results[$k]['etag'] = md5_file($v->getPathname());
+                $counter++;
+            }
+        }
+        $results['results'] = $counter;
+        return $results;
     }
 }
 
