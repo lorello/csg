@@ -11,19 +11,66 @@ A gateway for object-storage (S3, GDrive) and traditional storage protocols (FTP
 Api (v. 1)
 ------------
 
-All API access is over HTTPS, and accessed from the csg.pagodabox.com domain (or through yourdomain.com/api/v1/ for enterprise). All data is sent and received as JSON.
+All API access is over HTTPS, and accessed from the csg.pagodabox.com domain.
+All data is sent and received as JSON.
+All timestamps are returned in ISO 8601 format:
 <pre>
-Http verb   URL                     Parameters                
+YYYY-MM-DDTHH:MM:SSZ
+</pre>
 
-GET         /v1/help
-GET         /v1/files               Name
-POST        /v1/files               Name, Content-Type, Content-Length
-GET         /v1/files/childrens     Name
-POST        /v1/files/copy          Name, Destination
-POST        /v1/files/link          Name, Destination
-POST        /v1/files/trash         Name
-DELETE      /v1/files               Name
-POST        /v1/files/touch         Name
+Client Errors
+
+Sending invalid JSON will result in a 400 Bad Request response.
+Sending the wrong type of JSON values will result in a 400 Bad Request response.
+Sending invalid fields will result in a 422 Unprocessable Entity response.
+
+
+HTTP Verbs
+Where possible, API strives to use appropriate HTTP verbs for each action.
+
+HEAD
+    Can be issued against any resource to get just the HTTP header info.
+
+GET
+    Used for retrieving resources.
+
+POST
+    Used for creating resources, or performing custom actions.
+
+PATCH
+    Used for updating resources with partial JSON data.
+
+PUT
+    Used for replacing resources or collections. For PUT requests with no body attribute, be sure to set the Content-Length header to zero.
+
+DELETE
+    Used for deleting resources.
+
+
+<pre>
+Status  Verb        URL                     Parameters
+
+[x]     GET         /v1/help
+
+[x]     GET         /v1/files               Name                                    download an existing item
+[x]     POST        /v1/files               Name, Content-Type, Content-Length      upload a new file ore create e new folder
+[ ]     PATCH       /v1/files               Name, Content-Type, Content-Length      update an existing file
+[ ]     GET         /v1/files/childrens     Name                                    list a folder contents
+[ ]     POST        /v1/files/copy          Name, Destination                       create a copy
+[ ]     POST        /v1/files/link          Name, Destination                       create another Name for an existing resource
+[ ]     POST        /v1/files/trash         Name                                    put an object in the trash
+[ ]     DELETE      /v1/files               Name                                    delete an object skipping the trash
+[ ]     POST        /v1/files/touch         Name                                    create an emtpy object
+
+[ ]     POST        /v1/auth/register       Email                                   register to the service
+[ ]     GET         /v1/auth/confirm        Token                                   confirm registration
+
+[ ]     GET         /v1/services/list                                                   list of subscribed services
+[ ]     POST        /v1/services/s3             Bucket, AuthToken, AccessKey            add s3 account for a bucket
+[ ]     DELETE      /v1/services/s3/bucket                                              remove access to a S3 bucket
+[ ]     POST        /v1/services/gdrive         Domain, AuthToken                       add Google Drive account for a domain
+[ ]     DELETE      /v1/services/gdrive/domain                                          remove access to a Google Drive domain
+
 </pre>
 All request MUST use at least those header:
 
