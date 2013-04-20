@@ -4,7 +4,7 @@ namespace Softec\Cloud;
 
 // Using a posix filesystem which can simulate object storage
 // saving metadata to posix extended attributes
-class PosixFile implements ObjectStorage
+class PosixObjectStorage implements ObjectStorage
 {
     private $domain;
 

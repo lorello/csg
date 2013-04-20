@@ -1,11 +1,5 @@
 <?php
-require __DIR__ . '/../vendor/autoload.php';
-
-# TODO: classes autoloading
-require __DIR__ . '/../src/Softec/Cloud/ObjectStorageServiceProvider.php';
-require __DIR__ . '/../src/Softec/Cloud/ObjectStorage.php';
-require __DIR__ . '/../src/Softec/Cloud/PosixObjectStorage.php';
-require __DIR__ . '/../src/Softec/Cloud/GoogleDriveObjectStorage.php';
+$loader = require __DIR__ . '/../vendor/autoload.php';
 
 // to use Request object
 use Symfony\Component\HttpFoundation\Request;

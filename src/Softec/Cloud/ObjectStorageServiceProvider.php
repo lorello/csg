@@ -60,7 +60,7 @@ class ObjectStorageServiceProvider implements ServiceProviderInterface
                         break;
 
                     case 'posix':
-                        return new PosixFile($domain, $username, $pathname);
+                        return new PosixObjectStorage($domain, $username, $pathname);
                         break;
 
                     default:
