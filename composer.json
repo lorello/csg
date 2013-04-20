@@ -15,11 +15,12 @@
         "php": ">=5.3.2",
         "silex/silex": "1.0.*",
         "symfony/browser-kit": "2.1.*",
-        "symfony/css-selector": ">=2.0,<3.0"
+        "symfony/css-selector": ">=2.0,<3.0",
+        "aws/aws-sdk-php": "2.*"
     },
     "autoload": {
         "psr-0": {
-            "": "src/"
+            "Softec": "src/"
         }
     },
     "minimum-stability": "dev"
