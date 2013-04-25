@@ -48,33 +48,35 @@ DELETE
 
 
 <pre>
-Status  Verb        URL                     Parameters
+Verb        URL                     Parameters                              Description
+------      -------------------     -----------------------------------     --------------------------------------------
+GET         /v1/help
 
-[x]     GET         /v1/help
+GET         /v1/files               Name                                    download an existing item
+POST        /v1/files               Name, Content-Type, Content-Length      upload a new file ore create e new folder
+PATCH       /v1/files               Name, Content-Type, Content-Length      update an existing file
+GET         /v1/files/childrens     Name                                    list a folder contents
+POST        /v1/files/copy          Name, Destination                       create a copy
+POST        /v1/files/link          Name, Destination                       create another Name for an existing resource
+POST        /v1/files/trash         Name                                    put an object in the trash
+DELETE      /v1/files               Name                                    delete an object skipping the trash
+POST        /v1/files/touch         Name                                    create an emtpy object
 
-[x]     GET         /v1/files               Name                                    download an existing item
-[x]     POST        /v1/files               Name, Content-Type, Content-Length      upload a new file ore create e new folder
-[ ]     PATCH       /v1/files               Name, Content-Type, Content-Length      update an existing file
-[ ]     GET         /v1/files/childrens     Name                                    list a folder contents
-[ ]     POST        /v1/files/copy          Name, Destination                       create a copy
-[ ]     POST        /v1/files/link          Name, Destination                       create another Name for an existing resource
-[ ]     POST        /v1/files/trash         Name                                    put an object in the trash
-[ ]     DELETE      /v1/files               Name                                    delete an object skipping the trash
-[ ]     POST        /v1/files/touch         Name                                    create an emtpy object
+POST        /v1/auth/register       Email                                   register to the service
+GET         /v1/auth/confirm        Token                                   confirm registration
 
-[ ]     POST        /v1/auth/register       Email                                   register to the service
-[ ]     GET         /v1/auth/confirm        Token                                   confirm registration
-
-[ ]     GET         /v1/services/list                                                   list of subscribed services
-[ ]     POST        /v1/services/s3             Bucket, AuthToken, AccessKey            add s3 account for a bucket
-[ ]     DELETE      /v1/services/s3/bucket                                              remove access to a S3 bucket
-[ ]     POST        /v1/services/gdrive         Domain, AuthToken                       add Google Drive account for a domain
-[ ]     DELETE      /v1/services/gdrive/domain                                          remove access to a Google Drive domain
+GET         /v1/services/list                                                   list of subscribed services
+POST        /v1/services/s3             Bucket, AuthToken, AccessKey            add s3 account for a bucket
+DELETE      /v1/services/s3/bucket                                              remove access to a S3 bucket
+POST        /v1/services/gdrive         Domain, AuthToken                       add Google Drive account for a domain
+DELETE      /v1/services/gdrive/domain                                          remove access to a Google Drive domain
 
 </pre>
-All request MUST use at least those header:
 
- * Auth-Key    the private authorization key
+All request MUST use at least those headers:
+
+ * Auth-Key     the private authorization key
+ * User-Id      the user id
 
 Optional parameters
 
@@ -103,4 +105,10 @@ Technology
 ----------
 
 Written in PHP, uses Redis as data storage, cache and queue manager.
+
+Current status
+--------------
+Implementation status is tracked here https://trello.com/board/cloud-storage-gateway/50903634f77ac4470d00249b
+
+Sorry, many items are written in Italian, I'll translate them in english...
 
