@@ -17,7 +17,7 @@ $app['object_storage.protocols'] = array('gdrive', 'posix');
 $app['auth.enable'] = true;
 $app['auth.keys'] = array('fqw7vTgs99PcpMdm', '9prpb4mRddwJwvgf');
 
-$app['files.max_size']=1000000;
+$app['files.max_size'] = 1000000;
 
 // TODO: separate this in bootstrap
 $app->register(
@@ -62,7 +62,7 @@ $app->get(
 $app->get(
     '/error/{code}',
     function ($code) use ($app) {
-        return $app->json(array('response'=>'ko'), $code);
+        return $app->json(array('response' => 'ko'), $code);
     }
 )->assert('code', '\d{3}');
 
@@ -112,11 +112,11 @@ $v1->get(
         // }
 
 
-        //$stream = function () use ($f) {
-        //    echo "!ciao";
-        //};
+        $stream = function () use ($f) {
+            echo $f->getItem();
+        };
 
-        return $app->stream($f->getItem(), 200);
+        return $app->stream($stream, 200);
     }
 );
 
@@ -138,7 +138,7 @@ $v1->post(
         }
 
         if ($size > $app['files.max_size']) {
-            $app->error('500', "Cannot create a file bigger than ".$app['files.max_size']);
+            $app->error('500', "Cannot create a file bigger than " . $app['files.max_size']);
         }
 
         $content = $request->getContent();
@@ -172,7 +172,6 @@ $v1->post(
         $d = $app['object_storage']($destination);
 
 
-
         return $app->json(array('response' => 'ok', 'name' => $name, 'destination' => $destination));
     }
 );
@@ -183,6 +182,7 @@ $v1->get(
     function (Request $request) use ($app) {
         $name = $request->headers->get('name');
         $f = $app['object_storage']($name);
+
         return $app->json(array('response' => 'ok', 'name' => $name, 'childrens' => $f->getChildrens()));
     }
 );
