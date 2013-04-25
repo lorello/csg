@@ -1,7 +1,8 @@
 {
     "name": "softec/cloud-storage-gateway",
     "type": "application",
-    "description": "An example app made with Silex, by LoreLLo",
+    "description": "A gateway between your cloud app and the cloud storage services, to make your app use them asynchronously",
+    "keywords": ["cloud", "storage", "API", "gateway", "performance", "asynchronous", "silex", "redis", "12factor" ],
     "license": "BSD-3",
     "authors": [
         {
@@ -10,12 +11,13 @@
             "homepage": "http://lorello.it"
         }
     ],
-
     "require": {
         "php": ">=5.3.2",
         "silex/silex": "1.0.*",
         "symfony/browser-kit": "2.1.*",
         "symfony/css-selector": ">=2.0,<3.0",
+        "predis/predis": "~0.8.3@stable",
+        "predis/service-provider": ">0",
         "aws/aws-sdk-php": "2.*"
     },
     "autoload": {

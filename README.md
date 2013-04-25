@@ -112,3 +112,6 @@ Implementation status is tracked here https://trello.com/board/cloud-storage-gat
 
 Sorry, many items are written in Italian, I'll translate them in english...
 
+Tests
+-----
+https://travis-ci.org/lorello/csg
