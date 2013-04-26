@@ -1,5 +1,8 @@
 <?php
 /**
+ * Class from Andrew Moore
+ * http://www.php.net/manual/en/function.uniqid.php#94959
+ *
  * The following class generates VALID RFC 4211 COMPLIANT Universally Unique IDentifiers (UUID)
  * version 3, 4 and 5.
  * Version 3 and 5 UUIDs are named based. They require a namespace (another valid UUID) and a
