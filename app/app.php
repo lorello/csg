@@ -19,6 +19,15 @@ $app['auth.keys'] = array('fqw7vTgs99PcpMdm', '9prpb4mRddwJwvgf');
 
 $app['files.max_size'] = 1000000;
 
+
+$app->register(
+    new Predis\Silex\PredisServiceProvider(),
+    array(
+        'predis.parameters' => 'tcp://127.0.0.1:6379'
+        #'predis.options'    => array('profile' => '2.2'),
+    )
+);
+
 // TODO: separate this in bootstrap
 $app->register(
     new Softec\Cloud\ObjectStorageServiceProvider(),
@@ -56,6 +65,18 @@ $app->get(
     }
 );
 
+$app->get(
+    '/redischeck',
+    function () use ($app) {
+
+        $app['predis']->set('chiave', 'valore');
+
+
+        return $app['predis']->get('chiave');
+    }
+);
+
+
 // ok: 200 OK, 201 created, 202 accepted, 203 not autoritative request, 204 no content, 205 reset content
 // ?: 300 multiple choices, 301 moved permanently, 302 found, 303 see other, 304 not modified
 // errors: 500, internal server error, 501 not implemented ,502 bad gateway, 503 Service Unavailable, 504 gateway timeout
@@ -84,8 +105,8 @@ $v1->get(
     }
 );
 
+
 // TODO: separate these in src/controllers.php
-// TODO: download an item
 $v1->get(
     '/files',
     function (Request $request) use ($app) {
@@ -120,7 +141,6 @@ $v1->get(
     }
 );
 
-// TODO: Insert a new file or update an existent one
 $v1->post(
     '/files',
     function (Request $request) use ($app) {

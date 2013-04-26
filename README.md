@@ -115,3 +115,7 @@ Sorry, many items are written in Italian, I'll translate them in english...
 Tests
 -----
 https://travis-ci.org/lorello/csg
+
+License
+-------
+GNU Affero General Public License v3.0
