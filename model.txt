@@ -1,12 +1,18 @@
 
-set dirs:$google_id "{id: $google_it, name:lcdfslfkdsòfsd, owner:lorello}"
-hset dirs:lookup:name $name $google_id
+set users:uid:$uid "{ username:lorello@openweb.it, api_hourly_rate_limit:1000}"
+hset users:lookup:name $username $uid
 
+
+
+
+Directory structure on gdrive
+set gdrive:dirs:$google_id "{id: $google_it, name:lcdfslfkdsòfsd, owner:lorello}"
+hset gdrive:dirs:lookup:name $name $google_id
 
 per trovare
 
-$google_id = hget dirs:lookup:name $name
-dir = get dirs:$google_id
+$google_id = hget gdrive:dirs:lookup:name $name
+dir = get gdrive:dirs:$google_id
 
 oppure
 
